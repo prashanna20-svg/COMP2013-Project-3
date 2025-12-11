@@ -209,7 +209,6 @@ const isAdmin = username === "admin" || username === "Admin";
   };
 
   const handleLogout = () => {
-  Cookies.remove("username");
   Cookies.remove("jwt-authorization"); 
   setUsername("");
   navigate("/login"); 

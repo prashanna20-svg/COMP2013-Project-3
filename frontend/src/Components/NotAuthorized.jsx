@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-
 export default function NotAuthorized() {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Error: 403 - User not authorized</h1>
-      <p>You must be logged in to access this page.</p>
+    <div>
+      <h1>You are not authorized to visit this page</h1>
       <Link to="/login" style={{ color: "blue" }}>
         Back to login page
       </Link>
