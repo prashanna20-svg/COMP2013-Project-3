@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";                 
 import CartContainer from "./CartContainer";
 import ProductsContainer from "./ProductsContainer";
 import NavBar from "./NavBar";
 import axios from "axios";
-import ProductForm from "./ProductForm";
+import FilterForm from "./FilterForm"; 
+
 
 export default function GroceriesAppContainer() {
   /////////// States ///////////
   const [productQuantity, setProductQuantity] = useState();
   const [cartList, setCartList] = useState([]);
   const [productList, setProductList] = useState([]);
+  const [productsDisplay, setProductsDisplay] = useState([]);
   const [postResponse, setPostResponse] = useState("");
   const [formData, setFormData] = useState({
     productName: "",
@@ -18,6 +22,12 @@ export default function GroceriesAppContainer() {
     price: "",
   });
   const [isEditing, setIsEditing] = useState(false);
+
+const navigate = useNavigate();
+  const [username, setUsername] = useState(Cookies.get("username"));
+const isAdmin = username === "admin" || username === "Admin";
+
+
 
   //////////useEffect////////
 
@@ -35,6 +45,7 @@ export default function GroceriesAppContainer() {
     try {
       await axios.get("http://localhost:3000/products").then((result) => {
         setProductList(result.data);
+        setProductsDisplay(result.data);
         setProductQuantity(initialProductQuantity(result.data));
       });
     } catch (error) {
@@ -87,6 +98,8 @@ export default function GroceriesAppContainer() {
     });
     setIsEditing(true);
     setPostResponse("");
+
+    navigate("/edit-product");
   };
 
   const handleUpdateProduct = async (productId) => {
@@ -194,26 +207,45 @@ export default function GroceriesAppContainer() {
   const handleClearCart = () => {
     setCartList([]);
   };
+
+  const handleLogout = () => {
+  Cookies.remove("username");
+  Cookies.remove("jwt-authorization"); 
+  setUsername("");
+  navigate("/login"); 
+  }
+
+  const handleFilterPrices = (e) => {
+    const maxPrice = e.target.value;
+    if (maxPrice !== "all") {
+      setProductsDisplay(productList.filter((product) => Number(product.price) < maxPrice));
+    } else {
+      setProductsDisplay(productList);
+    }
+  };
+
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} />
+      <NavBar 
+      quantity={cartList.length} 
+      username={username}  
+      handleLogout={handleLogout}  
+      handleAddProduct={() => navigate("/add-product")} 
+      />
+
       <div className="GroceriesApp-Container">
-        <ProductForm
-          handleOnSubmit={handleOnSubmit}
-          postResponse={postResponse}
-          handleOnChange={handleOnChange}
-          formData={formData}
-          isEditing={isEditing}
-        />
+        <FilterForm handleFilterPrices={handleFilterPrices} /> 
+
         <ProductsContainer
-          products={productList}
+          products={productsDisplay}
           handleAddQuantity={handleAddQuantity}
           handleRemoveQuantity={handleRemoveQuantity}
           handleAddToCart={handleAddToCart}
           productQuantity={productQuantity}
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
+          isAdmin={isAdmin}
         />
         <CartContainer
           cartList={cartList}
