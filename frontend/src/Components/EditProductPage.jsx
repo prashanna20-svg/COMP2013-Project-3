@@ -5,6 +5,7 @@ import ProductForm from "./ProductForm";
 
 export default function EditProductPage() {
   const navigate = useNavigate();
+  const [postResponse, setPostResponse] = useState("");
   const { id } = useParams(); 
   const [formData, setFormData] = useState({
     productName: "",
@@ -12,7 +13,7 @@ export default function EditProductPage() {
     image: "",
     price: "",
   });
-  const [postResponse, setPostResponse] = useState("");
+  
 
   // Fetch existing product data
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function EditProductPage() {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:3000/products/${id}`, formData);
+      const response = await axios.patch(`http://localhost:3000/products/${id}`, formData);
       setPostResponse(`${response.data.productName} updated successfully!`);
      
     } catch (error) {

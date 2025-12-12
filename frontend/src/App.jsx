@@ -22,7 +22,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/main" element={<GroceriesAppContainer />} />
           <Route path="/add-product" element={<AddProductPage />} />
-          <Route path="/edit-product" element={<EditProductPage />} />
+          <Route path="/edit-product/:id" element={<EditProductPage />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

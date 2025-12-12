@@ -24,7 +24,8 @@ export default function GroceriesAppContainer() {
   const [isEditing, setIsEditing] = useState(false);
 
 const navigate = useNavigate();
-  const [username, setUsername] = useState(Cookies.get("username"));
+
+const [username, setUsername] = useState(Cookies.get("username"));
 const isAdmin = username === "admin" || username === "Admin";
 
 
@@ -99,7 +100,7 @@ const isAdmin = username === "admin" || username === "Admin";
     setIsEditing(true);
     setPostResponse("");
 
-    navigate("/edit-product");
+    navigate(`/edit-product/${product._id}`);;
   };
 
   const handleUpdateProduct = async (productId) => {
@@ -235,7 +236,6 @@ const isAdmin = username === "admin" || username === "Admin";
 
       <div className="GroceriesApp-Container">
         <FilterForm handleFilterPrices={handleFilterPrices} /> 
-
         <ProductsContainer
           products={productsDisplay}
           handleAddQuantity={handleAddQuantity}
@@ -245,6 +245,7 @@ const isAdmin = username === "admin" || username === "Admin";
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
           isAdmin={isAdmin}
+          
         />
         <CartContainer
           cartList={cartList}

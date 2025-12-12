@@ -5,14 +5,14 @@ import ProductForm from "./ProductForm";
 
 export default function AddProductPage() {
   const navigate = useNavigate();
+  const [postResponse, setPostResponse] = useState("");
   const [formData, setFormData] = useState({
     productName: "",
     brand: "",
     image: "",
     price: "",
   });
-  const [postResponse, setPostResponse] = useState("");
-
+  
   // Handle input changes
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
