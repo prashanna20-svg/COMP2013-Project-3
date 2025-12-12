@@ -26,14 +26,13 @@ mongoose
   });
 
 server.get("/", (request, response) => {
-  response.send("LIVE!");
+  response.send("Server is live!");
 });
 
 //Register new user route
 server.post("/register", async (request, response) => {
   const { username, password } = request.body;
   try {
-    //Hashing a password need bcrypt and salt rounds as an int
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
@@ -132,6 +131,16 @@ server.patch("/products/:id", async (request, response) => {
     }).then((result) =>
       response.status(200).send(`${productName} edited\nwith id: ${prodId}`)
     );
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+server.get("/products/:id", async (request, response) => {
+  const { id } = request.params;
+  try {
+    const product = await Product.findById(id);
+    response.status(200).send(product);
   } catch (error) {
     console.log(error.message);
   }
